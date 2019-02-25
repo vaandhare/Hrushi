@@ -34,6 +34,6 @@ public class RequestTask  extends AsyncTask<AIRequest, Void, AIResponse> {
 
     @Override
     protected void onPostExecute(AIResponse aiResponse) {
-        ((MainActivity)activity).callback(aiResponse);
+//        ((MainActivity)activity).callback(aiResponse);
     }
 }

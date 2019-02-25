@@ -1,47 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/colorGrey">
 
 
     <RelativeLayout
         android:id="@+id/inputLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
         android:layout_alignParentBottom="true"
-        android:background="@android:color/white"
         android:gravity="bottom"
-        android:paddingBottom="9dp"
+        android:paddingBottom="5dp"
         android:paddingEnd="8dp"
-        android:paddingStart="8dp"
-        android:paddingTop="8dp">
+        android:paddingStart="8dp">
 
-        <!--<ai.api.ui.AIButton-->
-        <!--android:id="@+id/micButton"-->
-        <!--style="@style/ApiAi.Microphone"-->
-        <!--android:layout_height="152dp"-->
-        <!--android:layout_alignParentStart="true"-->
-        <!--android:layout_gravity="center_horizontal"-->
-        <!--android:visibility="visible" />-->
 
-        <ImageView
-            android:id="@+id/sendBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <!--<ImageButton-->
+            <!--android:id="@+id/img_btn_voice"-->
+            <!--android:layout_width="45dp"-->
+            <!--android:layout_height="45dp"-->
+            <!--android:layout_alignParentBottom="true"-->
+            <!--android:layout_marginBottom="1dp"-->
+            <!--android:layout_marginStart="3dp"-->
+            <!--android:background="@drawable/background_send_btn"-->
+            <!--android:src="@drawable/voice_btn"-->
+            <!--tools:ignore="ContentDescription" />-->
+
+        <!--<EditText-->
+            <!--android:id="@+id/text_send"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:padding="10dp"-->
+            <!--android:layout_marginBottom="1dp"-->
+            <!--android:layout_marginStart="5dp"-->
+            <!--android:background="@drawable/background_text"-->
+            <!--android:hint="@string/type_a_message"-->
+            <!--android:layout_marginEnd="5dp"-->
+            <!--android:layout_alignParentBottom="true"-->
+            <!--android:layout_toEndOf="@id/img_btn_voice"-->
+            <!--android:layout_toStartOf="@id/img_btn_send"-->
+            <!--tools:ignore="Autofill,TextFields" />-->
+
+        <ImageButton
+            android:id="@+id/img_btn_voice"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_alignParentEnd="true"
-            android:paddingTop="4dp"
-            android:src="@drawable/send_btn" />
-
-        <EditText
-            android:id="@+id/queryEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_toStartOf="@+id/sendBtn"
-            android:imeOptions="actionSend"
-            android:inputType="text"
-            android:paddingTop="4dp"
-            android:textSize="18sp" />
+            android:layout_marginBottom="1dp"
+            android:background="@drawable/background_send_btn"
+            android:src="@drawable/voice_btn"
+            tools:ignore="ContentDescription" />
 
     </RelativeLayout>
 

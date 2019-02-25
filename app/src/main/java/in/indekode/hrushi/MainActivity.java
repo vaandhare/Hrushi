@@ -1,5 +1,12 @@
 package in.indekode.hrushi;
 
+import android.annotation.SuppressLint;
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
+import android.os.AsyncTask;
+import android.os.Handler;
+import android.speech.RecognizerIntent;
+import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -8,7 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -23,8 +30,13 @@ import com.google.cloud.dialogflow.v2beta1.SessionName;
 import com.google.cloud.dialogflow.v2beta1.SessionsClient;
 import com.google.cloud.dialogflow.v2beta1.SessionsSettings;
 import com.google.cloud.dialogflow.v2beta1.TextInput;
+import com.google.cloud.translate.Translate;
+import com.google.cloud.translate.TranslateOptions;
+import com.google.cloud.translate.Translation;
 
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Locale;
 import java.util.UUID;
 
 import ai.api.AIServiceContext;
@@ -40,18 +52,23 @@ public class MainActivity extends AppCompatActivity {
     private static final int USER = 10001;
     private static final int BOT = 10002;
 
+    private static final String API_KEY = "AIzaSyD9owNo4QA_FPicnD7F-p4hLji-QxD2UDg";
+
     private String uuid = UUID.randomUUID().toString();
     private LinearLayout chatLayout;
-    private EditText queryEditText;
 
-    // Android client
-    private AIRequest aiRequest;
-    private AIDataService aiDataService;
-    private AIServiceContext customAIServiceContext;
+    ImageButton voice_ibtn;
+    public String v_msg;
+
+    // TTS
+    final int RESULT_SPEECH = 100;
+    TextToSpeech mTextToSpeech;
 
     // Java V2
     private SessionsClient sessionsClient;
     private SessionName session;
+
+    final Handler th = new Handler();
 
 
     @Override
@@ -62,40 +79,14 @@ public class MainActivity extends AppCompatActivity {
         final ScrollView scrollview = findViewById(R.id.chatScrollView);
         scrollview.post(() -> scrollview.fullScroll(ScrollView.FOCUS_DOWN));
 
+        voice_ibtn = findViewById(R.id.img_btn_voice);
+
         chatLayout = findViewById(R.id.chatLayout);
 
-        ImageView sendBtn = findViewById(R.id.sendBtn);
-        sendBtn.setOnClickListener(this::sendMessage);
-
-        queryEditText = findViewById(R.id.queryEditText);
-        queryEditText.setOnKeyListener((view, keyCode, event) -> {
-            if (event.getAction() == KeyEvent.ACTION_DOWN) {
-                switch (keyCode) {
-                    case KeyEvent.KEYCODE_DPAD_CENTER:
-                    case KeyEvent.KEYCODE_ENTER:
-                        sendMessage(sendBtn);
-                        return true;
-                    default:
-                        break;
-                }
-            }
-            return false;
-        });
-
-        // Android client
-       initChatbot();
-
-        // Java V2
         initV2Chatbot();
-    }
+        showTextView("नमस्कार, मी तुमची मदत कशी करू शकतो?", BOT);
 
-    private void initChatbot() {
-        final AIConfiguration config = new AIConfiguration(BuildConfig.ClientAccessToken,
-                AIConfiguration.SupportedLanguages.English,
-                AIConfiguration.RecognitionEngine.System);
-        aiDataService = new AIDataService(this, config);
-        customAIServiceContext = AIServiceContextBuilder.buildFromSessionId(uuid);// helps to create new session whenever app restarts
-        aiRequest = new AIRequest();
+        voice_ibtn.setOnClickListener(this::getVoiceInput);
     }
 
     private void initV2Chatbot() {
@@ -113,42 +104,138 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void sendMessage(View view) {
-        String msg = queryEditText.getText().toString();
-        if (msg.trim().isEmpty()) {
-            Toast.makeText(MainActivity.this, "Please enter your query!", Toast.LENGTH_LONG).show();
-        } else {
-            showTextView(msg, USER);
-            queryEditText.setText("");
-            // Android client
-            aiRequest.setQuery(msg);
-            RequestTask requestTask = new RequestTask(MainActivity.this, aiDataService, customAIServiceContext);
-            requestTask.execute(aiRequest);
-
-            // Java V2
-            QueryInput queryInput = QueryInput.newBuilder().setText(TextInput.newBuilder().setText(msg).setLanguageCode("en-US")).build();
-            new RequestJavaV2Task(MainActivity.this, session, sessionsClient, queryInput).execute();
+    private void getVoiceInput(View view) {
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "कृपया बाबाजीशी बोला...\n");
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        try{
+            startActivityForResult(intent, RESULT_SPEECH);
+        }
+        catch (ActivityNotFoundException e){
+            Toast.makeText(getApplicationContext(),"अरेरे! तुमचा मोबाइल मायक्रोफोनला समर्थन देत नाही..", Toast.LENGTH_SHORT).show();
         }
     }
 
-    public void callback(AIResponse aiResponse) {
-        if (aiResponse != null) {
-            // process aiResponse here
-            String botReply = aiResponse.getResult().getFulfillment().getSpeech();
-            Log.d(TAG, "Bot Reply: " + botReply);
-            showTextView(botReply, BOT);
-        } else {
-            Log.d(TAG, "Bot Reply: Null");
-            showTextView("There was some communication issue. Please Try again!", BOT);
+    @SuppressLint("StaticFieldLeak")
+    @Override
+    protected void onActivityResult(int requestCode, int resultcode, Intent data){
+        super.onActivityResult(requestCode, resultcode, data);
+        switch (requestCode) {
+            case RESULT_SPEECH: {
+                if (resultcode == RESULT_OK && null != data) {
+                    ArrayList<String> text = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                    v_msg = text.get(0);
+                    if (v_msg.trim().isEmpty()) {
+                        Toast.makeText(MainActivity.this, "Please enter your query!", Toast.LENGTH_LONG).show();
+                    } else {
+
+                        final AsyncTask<Void, Void, Void> de = new AsyncTask<Void, Void, Void>() {
+                            @SuppressLint("WrongThread")
+                            @Override
+                            protected Void doInBackground(Void... voids) {
+
+                                TranslateOptions options = TranslateOptions.newBuilder().setApiKey(API_KEY).build();
+                                final Translate translate = options.getService();
+                                final Translation translation = translate.translate(v_msg, Translate.TranslateOption.targetLanguage("en"));
+                                th.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        String MrUserReply = translation.getTranslatedText();
+                                        showTextView(v_msg, USER);
+
+                                        // Java V2
+                                        QueryInput queryInput = QueryInput.newBuilder().setText(TextInput.newBuilder().setText(MrUserReply).setLanguageCode("en-US")).build();
+                                        new RequestJavaV2Task(MainActivity.this, session, sessionsClient, queryInput).execute();
+
+                                    }
+                                });
+                                return null;
+                            }
+                        }.execute();
+                    }
+                }
+                break;
+            }
         }
+
+        mTextToSpeech=new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if(status != TextToSpeech.ERROR) {
+                    mTextToSpeech.setLanguage(new Locale("mr","IND"));
+                }
+            }
+        });
     }
 
+//    @SuppressLint("StaticFieldLeak")
+//    private void sendMessage(View view) {
+//        String msg = queryEditText.getText().toString();
+//        Toast.makeText(MainActivity.this, v_msg, Toast.LENGTH_SHORT).show();
+//
+//        if (msg.trim().isEmpty()) {
+//            Toast.makeText(MainActivity.this, "Please enter your query!", Toast.LENGTH_LONG).show();
+//        } else {
+//
+//            final AsyncTask<Void, Void, Void> de = new AsyncTask<Void, Void, Void>() {
+//                @SuppressLint("WrongThread")
+//                @Override
+//                protected Void doInBackground(Void... voids) {
+//
+//                    TranslateOptions options = TranslateOptions.newBuilder().setApiKey(API_KEY).build();
+//                    final Translate translate = options.getService();
+//                    final Translation translation = translate.translate(msg, Translate.TranslateOption.targetLanguage("en"));
+//                    th.post(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            String MrUserReply = translation.getTranslatedText();
+//                            showTextView(msg, USER);
+//                            queryEditText.setText("");
+//
+//                            // Android client
+//                //            aiRequest.setQuery(msg);
+//                //            RequestTask requestTask = new RequestTask(MainActivity.this, aiDataService, customAIServiceContext);
+//                //            requestTask.execute(aiRequest);
+//
+//                            // Java V2
+//                            QueryInput queryInput = QueryInput.newBuilder().setText(TextInput.newBuilder().setText(MrUserReply).setLanguageCode("en-US")).build();
+//                            new RequestJavaV2Task(MainActivity.this, session, sessionsClient, queryInput).execute();
+//
+//                        }
+//                    });
+//                    return null;
+//                }
+//            }.execute();
+//
+//        }
+//    }
+
+    @SuppressLint("StaticFieldLeak")
     public void callbackV2(DetectIntentResponse response) {
         if (response != null) {
             // process aiResponse here
             String botReply = response.getQueryResult().getFulfillmentText();
-            Log.d(TAG, "V2 Bot Reply: " + botReply);
-            showTextView(botReply, BOT);
+
+            final AsyncTask<Void, Void, Void> de = new AsyncTask<Void, Void, Void>() {
+                @SuppressLint("WrongThread")
+                @Override
+                protected Void doInBackground(Void... voids) {
+
+                    TranslateOptions options = TranslateOptions.newBuilder().setApiKey(API_KEY).build();
+                    final Translate translate = options.getService();
+                    final Translation translation = translate.translate(botReply, Translate.TranslateOption.targetLanguage("mr"));
+                    th.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            String mrbotReply = translation.getTranslatedText();
+                            Log.d(TAG, "Bot Reply: " + mrbotReply);
+                            showTextView(mrbotReply, BOT);
+                        }
+                    });
+                    return null;
+                }
+            }.execute();
         } else {
             Log.d(TAG, "Bot Reply: Null");
             showTextView("There was some communication issue. Please Try again!", BOT);
@@ -173,7 +260,7 @@ public class MainActivity extends AppCompatActivity {
         TextView tv = layout.findViewById(R.id.chatMsg);
         tv.setText(message);
         layout.requestFocus();
-        queryEditText.requestFocus(); // change focus back to edit text to continue typing
+//        queryEditText.requestFocus(); // change focus back to edit text to continue typing
     }
 
     FrameLayout getUserLayout() {
@@ -185,4 +272,5 @@ public class MainActivity extends AppCompatActivity {
         LayoutInflater inflater = LayoutInflater.from(MainActivity.this);
         return (FrameLayout) inflater.inflate(R.layout.bot_msg_layout, null);
     }
+
 }
