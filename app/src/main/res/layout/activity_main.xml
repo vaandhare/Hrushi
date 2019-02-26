@@ -8,13 +8,12 @@
 
     <RelativeLayout
         android:id="@+id/inputLayout"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_width="100dp"
+        android:layout_height="70dp"
         android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
         android:gravity="bottom"
-        android:paddingBottom="5dp"
-        android:paddingEnd="8dp"
-        android:paddingStart="8dp">
+        android:layout_marginBottom="20dp">
 
 
         <!--<ImageButton-->
@@ -45,10 +44,10 @@
 
         <ImageButton
             android:id="@+id/img_btn_voice"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_alignParentEnd="true"
-            android:layout_marginBottom="1dp"
+            android:layout_marginEnd="20dp"
             android:background="@drawable/background_send_btn"
             android:src="@drawable/voice_btn"
             tools:ignore="ContentDescription" />

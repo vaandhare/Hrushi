@@ -4,12 +4,13 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "in.indekode.hrushi"
-        minSdkVersion 19
+        minSdkVersion 21
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        multiDexEnabled true
+//        multiDexEnabled true
+
     }
     buildTypes {
         release {
@@ -59,8 +60,7 @@ dependencies {
         exclude group: 'org.json', module: 'json'
     }
     annotationProcessor 'com.google.cloud:google-cloud-translate:1.62.0'
-
-
+    implementation 'commons-codec:commons-codec:1.9'
     testImplementation 'junit:junit:4.12'
     implementation 'com.android.support:support-annotations:28.0.0'
 }

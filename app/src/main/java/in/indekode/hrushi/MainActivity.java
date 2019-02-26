@@ -10,8 +10,10 @@ import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -44,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int USER = 10001;
     private static final int BOT = 10002;
 
-    private static final String API_KEY = "AIzaSyD9owNo4QA_FPicnD7F-p4hLji-QxD2UDg";
+    private static final String API_KEY = "AIzaSyDoR8abbyu_4BKomJClKA2y1_Sn_M9PJ3A";
 
     private String uuid = UUID.randomUUID().toString();
     private LinearLayout chatLayout;
