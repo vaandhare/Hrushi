@@ -1,14 +1,24 @@
 package in.indekode.hrushi;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.provider.CalendarContract;
+import android.provider.Settings;
 import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
+import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.ActivityCompat;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -83,9 +93,14 @@ public class MainActivity extends AppCompatActivity {
         chatLayout = findViewById(R.id.chatLayout);
 
         initV2Chatbot();
-        showTextView("???????, ?? ????? ??? ??? ??? ?????", BOT);
+        showTextView("नमस्कार, मी तुमची मदत कशी करू शकतो?", BOT);
 
-        voice_ibtn.setOnClickListener(this::getVoiceInput);
+        voice_ibtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                MainActivity.this.getVoiceInput(view);
+            }
+        });
     }
 
     private void initV2Chatbot() {
@@ -105,13 +120,13 @@ public class MainActivity extends AppCompatActivity {
     private void getVoiceInput(View view) {
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
-        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "????? ???????? ????...\n");
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "कृपया बाबाजीशी बोला...");
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
         try{
             startActivityForResult(intent, RESULT_SPEECH);
         }
         catch (ActivityNotFoundException e){
-            Toast.makeText(getApplicationContext(),"?????! ????? ?????? ???????????? ?????? ??? ????..", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(),"अरेरे! तुमचा मोबाइल मायक्रोफोनला समर्थन देत नाही..", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -144,8 +159,12 @@ public class MainActivity extends AppCompatActivity {
                                     String[] split_reply = MrUserReply.split(" ");
 
                                     for (String sr : split_reply) {
-                                        if (sr.equals("reminder")) {
-                                            CalenderActivity(year,mnth,day,hrs,min,summary);
+                                        if (sr.equals("emergency") || sr.equals("call") || sr.equals("help")) {
+//                                            CalenderActivity(year,mnth,day,hrs,min,summary);
+                                            String number = "7264814704";
+                                            Intent callIntent = new Intent(Intent.ACTION_CALL);
+                                            callIntent.setData(Uri.parse("tel:"+number));
+                                            startActivity(callIntent);
                                         }
                                         else {
                                             // Java V2
@@ -196,7 +215,7 @@ public class MainActivity extends AppCompatActivity {
             }.execute();
         } else {
             Log.d(TAG, "Bot Reply: Null");
-            showTextView("There was some communication issue. Please Try again!", BOT);
+            showTextView("संवाद साधण्यात समस्या आली. कृपया पुन्हा प्रयत्न करा!", BOT);
         }
     }
 
@@ -260,7 +279,7 @@ public class MainActivity extends AppCompatActivity {
         try {
             startActivity(intent);
         }catch (ActivityNotFoundException ErrVar) {
-            Toast.makeText(MainActivity.this, "Install Calender App", Toast.LENGTH_LONG).show();
+            Toast.makeText(MainActivity.this, "कॅलेंडर ॲप डाऊनलोड करा", Toast.LENGTH_LONG).show();
         }
 
     }
@@ -277,7 +296,7 @@ public class MainActivity extends AppCompatActivity {
             case R.id.Logout:
                 firebaseAuth.signOut();
                 finish();
-                Toast.makeText(MainActivity.this, "Successfully Signed out", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "यशस्वीरित्या साइन आउट केले", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(MainActivity.this, FirstActivity.class));
                 break;
         }

@@ -52,20 +52,17 @@ public class FirstActivity extends Activity {
 
     private void validate(final String username, final String passwords) {
 
-        progressDialog.setMessage("Connecting to the Server....");
+        progressDialog.setMessage("सर्व्हरशी कनेक्ट करीत आहे ...");
         progressDialog.show();
 
-        firebaseAuth.signInWithEmailAndPassword(username, passwords).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
+        firebaseAuth.signInWithEmailAndPassword(username, passwords).addOnCompleteListener(task -> {
 
-                if (task.isSuccessful()) {
-                    progressDialog.dismiss();
-//                    startActivity(new Intent(FirstActivity.this, MainActivity.class));
-                } else {
-                    progressDialog.dismiss();
-                    Toast.makeText(FirstActivity.this, "Login Failed", Toast.LENGTH_LONG).show();
-                }
+            if (task.isSuccessful()) {
+                progressDialog.dismiss();
+                startActivity(new Intent(FirstActivity.this, MainActivity.class));
+            } else {
+                progressDialog.dismiss();
+                Toast.makeText(FirstActivity.this, "अयशस्वी लॉग इन", Toast.LENGTH_LONG).show();
             }
         });
     }

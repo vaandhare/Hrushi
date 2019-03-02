@@ -1,61 +1,71 @@
 package in.indekode.hrushi;
 
 public class UserProfile {
-    public String Name1;
-    public String Email1;
-    public String Age1;
-    public String Mobile1;
-    public String Gender1;
+    public String name;
+    public String email;
+    public String age;
+    public String mobile;
+    public String gender;
+    public String ehelp;
 
     public UserProfile() {
 
     }
 
-    public UserProfile(String name1, String email1, String age1, String mobile1, String gender1) {
-        Name1 = name1;
-        Email1 = email1;
-        Age1 = age1;
-        Mobile1 = mobile1;
-        Gender1 = gender1;
+    public UserProfile(String name, String email, String age, String mobile, String gender, String ehelp) {
+        this.name = name;
+        this.age = age;
+        this.mobile = mobile;
+        this.gender = gender;
+        this.ehelp = ehelp;
+        this.email = email;
     }
 
-    public String getName1() {
-        return Name1;
+    public String getName() {
+        return name;
     }
 
-    public void setName1(String name1) {
-        Name1 = name1;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getEmail1() {
-        return Email1;
+    public String getEmail() {
+        return email;
     }
 
-    public void setEmail1(String email1) {
-        Email1 = email1;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public String getAge1() {
-        return Age1;
+    public String getAge() {
+        return age;
     }
 
-    public void setAge1(String age1) {
-        Age1 = age1;
+    public void setAge(String age) {
+        this.age = age;
     }
 
-    public String getMobile1() {
-        return Mobile1;
+    public String getMobile() {
+        return mobile;
     }
 
-    public void setMobile1(String mobile1) {
-        Mobile1 = mobile1;
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
     }
 
-    public String getGender1() {
-        return Gender1;
+    public String getGender() {
+        return gender;
     }
 
-    public void setGender1(String gender1) {
-        Gender1 = gender1;
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public String getEhelp() {
+        return ehelp;
+    }
+
+    public void setEhelp(String ehelp) {
+        this.ehelp = ehelp;
     }
 }
