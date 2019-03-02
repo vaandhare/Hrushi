@@ -5,15 +5,14 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Handler;
+import android.provider.CalendarContract;
 import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -36,6 +35,7 @@ import com.google.cloud.translate.Translation;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Locale;
 import java.util.UUID;
 
@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int USER = 10001;
     private static final int BOT = 10002;
 
-    private static final String API_KEY = "AIzaSyDoR8abbyu_4BKomJClKA2y1_Sn_M9PJ3A";
+    private static final String API_KEY = "AIzaSyBa8IxFrGti6qwe07CygDQnRE5qbdQvUmQ";
 
     private String uuid = UUID.randomUUID().toString();
     private LinearLayout chatLayout;
@@ -61,9 +61,7 @@ public class MainActivity extends AppCompatActivity {
     // Java V2
     private SessionsClient sessionsClient;
     private SessionName session;
-
     final Handler th = new Handler();
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,7 +86,6 @@ public class MainActivity extends AppCompatActivity {
             InputStream stream = getResources().openRawResource(R.raw.test_agent_credentials);
             GoogleCredentials credentials = GoogleCredentials.fromStream(stream);
             String projectId = ((ServiceAccountCredentials)credentials).getProjectId();
-
             SessionsSettings.Builder settingsBuilder = SessionsSettings.newBuilder();
             SessionsSettings sessionsSettings = settingsBuilder.setCredentialsProvider(FixedCredentialsProvider.create(credentials)).build();
             sessionsClient = SessionsClient.create(sessionsSettings);
@@ -132,17 +129,25 @@ public class MainActivity extends AppCompatActivity {
                                 TranslateOptions options = TranslateOptions.newBuilder().setApiKey(API_KEY).build();
                                 final Translate translate = options.getService();
                                 final Translation translation = translate.translate(v_msg, Translate.TranslateOption.targetLanguage("en"));
-                                th.post(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        String MrUserReply = translation.getTranslatedText();
-                                        showTextView(v_msg, USER);
+                                th.post(() -> {
+                                    String MrUserReply = translation.getTranslatedText();
+                                    showTextView(v_msg, USER);
 
-                                        // Java V2
-                                        QueryInput queryInput = QueryInput.newBuilder().setText(TextInput.newBuilder().setText(MrUserReply).setLanguageCode("en-US")).build();
-                                        new RequestJavaV2Task(MainActivity.this, session, sessionsClient, queryInput).execute();
+                                    //Reminder process
+                                    String[] split_reply = MrUserReply.split(" ");
 
+                                    for (String sr : split_reply) {
+                                        if (sr.equals("reminder")) {
+                                            CalenderActivity(year,mnth,day,hrs,min,summary);
+                                        }
+                                        else {
+                                            // Java V2
+                                                QueryInput queryInput = QueryInput.newBuilder().setText(TextInput.newBuilder().setText(MrUserReply).setLanguageCode("en-US")).build();
+                                                new RequestJavaV2Task(MainActivity.this, session, sessionsClient, queryInput).execute();
+                                                break;
+                                        }
                                     }
+
                                 });
                                 return null;
                             }
@@ -153,62 +158,17 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        mTextToSpeech=new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
-            @Override
-            public void onInit(int status) {
-                if(status != TextToSpeech.ERROR) {
-                    mTextToSpeech.setLanguage(new Locale("mr","IND"));
-                }
+        mTextToSpeech=new TextToSpeech(getApplicationContext(), status -> {
+            if(status != TextToSpeech.ERROR) {
+                mTextToSpeech.setLanguage(new Locale("mr","IND"));
             }
         });
     }
 
-//    @SuppressLint("StaticFieldLeak")
-//    private void sendMessage(View view) {
-//        String msg = queryEditText.getText().toString();
-//        Toast.makeText(MainActivity.this, v_msg, Toast.LENGTH_SHORT).show();
-//
-//        if (msg.trim().isEmpty()) {
-//            Toast.makeText(MainActivity.this, "Please enter your query!", Toast.LENGTH_LONG).show();
-//        } else {
-//
-//            final AsyncTask<Void, Void, Void> de = new AsyncTask<Void, Void, Void>() {
-//                @SuppressLint("WrongThread")
-//                @Override
-//                protected Void doInBackground(Void... voids) {
-//
-//                    TranslateOptions options = TranslateOptions.newBuilder().setApiKey(API_KEY).build();
-//                    final Translate translate = options.getService();
-//                    final Translation translation = translate.translate(msg, Translate.TranslateOption.targetLanguage("en"));
-//                    th.post(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            String MrUserReply = translation.getTranslatedText();
-//                            showTextView(msg, USER);
-//                            queryEditText.setText("");
-//
-//                            // Android client
-//                //            aiRequest.setQuery(msg);
-//                //            RequestTask requestTask = new RequestTask(MainActivity.this, aiDataService, customAIServiceContext);
-//                //            requestTask.execute(aiRequest);
-//
-//                            // Java V2
-//                            QueryInput queryInput = QueryInput.newBuilder().setText(TextInput.newBuilder().setText(MrUserReply).setLanguageCode("en-US")).build();
-//                            new RequestJavaV2Task(MainActivity.this, session, sessionsClient, queryInput).execute();
-//
-//                        }
-//                    });
-//                    return null;
-//                }
-//            }.execute();
-//
-//        }
-//    }
-
     @SuppressLint("StaticFieldLeak")
     public void callbackV2(DetectIntentResponse response) {
         if (response != null) {
-            // process aiResponse here
+
             String botReply = response.getQueryResult().getFulfillmentText();
 
             final AsyncTask<Void, Void, Void> de = new AsyncTask<Void, Void, Void>() {
@@ -219,13 +179,10 @@ public class MainActivity extends AppCompatActivity {
                     TranslateOptions options = TranslateOptions.newBuilder().setApiKey(API_KEY).build();
                     final Translate translate = options.getService();
                     final Translation translation = translate.translate(botReply, Translate.TranslateOption.targetLanguage("mr"));
-                    th.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            String mrbotReply = translation.getTranslatedText();
-                            Log.d(TAG, "Bot Reply: " + mrbotReply);
-                            showTextView(mrbotReply, BOT);
-                        }
+                    th.post(() -> {
+                        String mrbotReply = translation.getTranslatedText();
+                        Log.d(TAG, "Bot Reply: " + mrbotReply);
+                        showTextView(mrbotReply, BOT);
                     });
                     return null;
                 }
@@ -254,7 +211,6 @@ public class MainActivity extends AppCompatActivity {
         TextView tv = layout.findViewById(R.id.chatMsg);
         tv.setText(message);
         layout.requestFocus();
-//        queryEditText.requestFocus(); // change focus back to edit text to continue typing
     }
 
     FrameLayout getUserLayout() {
@@ -265,6 +221,41 @@ public class MainActivity extends AppCompatActivity {
     FrameLayout getBotLayout() {
         LayoutInflater inflater = LayoutInflater.from(MainActivity.this);
         return (FrameLayout) inflater.inflate(R.layout.bot_msg_layout, null);
+    }
+
+    final int year=2018;
+    final int mnth = 04;
+    final int day= 28;
+    final int hrs = 21;
+    final int min = 00;
+    final String summary = "This is title";
+    private long startTime,endTime;
+
+    public void CalenderActivity(int year, int mnth, int day, int hrs, int min, String summary){
+        Calendar beginCal = Calendar.getInstance();
+        beginCal.set(year, mnth, day, hrs, min);
+        startTime = beginCal.getTimeInMillis();
+
+        Calendar endCal = Calendar.getInstance();
+        endCal.set(year, mnth, day, hrs, min);
+        endTime = endCal.getTimeInMillis();
+
+        Intent intent = new Intent(Intent.ACTION_INSERT);
+        intent.setType("vnd.android.cursor.item/event");
+        intent.putExtra(CalendarContract.Events.TITLE, summary);
+        intent.putExtra(CalendarContract.Events.DESCRIPTION, summary);
+        intent.putExtra(CalendarContract.Events.EVENT_LOCATION, "");
+        intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, beginCal.getTimeInMillis());
+        intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, endCal.getTimeInMillis());
+        intent.putExtra(CalendarContract.Events.STATUS, 1);
+        intent.putExtra(CalendarContract.Events.VISIBLE, 0);
+        intent.putExtra(CalendarContract.Events.HAS_ALARM, 1);
+        try {
+            startActivity(intent);
+        }catch (ActivityNotFoundException ErrVar) {
+            Toast.makeText(MainActivity.this, "Install Calender App", Toast.LENGTH_LONG).show();
+        }
+
     }
 
 }

@@ -5,18 +5,93 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".FirstActivity"
-    android:background="@drawable/bg">
+    android:background="@color/colorPrimary">
 
-    <ImageButton
-        android:id="@+id/img_voice"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="20dp"
+    <ImageView
+        android:id="@+id/Logo_NCORD"
+        android:layout_width="wrap_content"
+        android:layout_height="100dp"
+        android:src="@drawable/ncordlogo"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginTop="30dp" />
+
+    <EditText
+        android:id="@+id/ET_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="आपले नाव टाइप करा"
+        android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
-        android:background="@drawable/background_send_btn"
-        android:src="@drawable/voice_btn"
-        tools:ignore="ContentDescription" />
+        android:layout_below="@id/Logo_NCORD"
+        android:layout_marginTop="50dp"
+        android:inputType="text"/>
+
+
+    <EditText
+        android:id="@+id/ET_email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="आपला ईमेल आयडी टाइप करा"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_below="@id/ET_name"
+        android:inputType="textEmailAddress"/>
+
+    <EditText
+        android:id="@+id/ET_mobile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="तुमचा मोबाइल क्रमांक टाइप करा"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_below="@id/ET_email"
+        android:inputType="phone"/>
+
+   <Spinner
+       android:id="@+id/SP_gender"
+       android:layout_width="match_parent"
+       android:layout_height="40dp"
+       android:layout_below="@id/ET_mobile"
+       android:layout_marginTop="20dp"
+       android:layout_marginStart="30dp"
+       android:layout_marginEnd="30dp"/>
+
+   <Button
+        android:id="@+id/BTN_otp"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@id/SP_gender"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="20dp"
+        android:background="@color/colorWhite"
+        android:text="Generate OTP"
+        android:textColor="@color/colorPrimary"/>
+
+   <EditText
+       android:id="@+id/ET_otp"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:layout_marginStart="100dp"
+       android:layout_marginEnd="100dp"
+       android:layout_below="@id/BTN_otp"
+       android:layout_marginTop="20dp"
+       android:text="OTP टाका"
+       android:inputType="numberSigned"/>
+
+   <Button
+       android:id="@+id/BTN_submit"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@id/ET_otp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="20dp"
+        android:background="@color/colorWhite"
+        android:text="Generate OTP"
+        android:textColor="@color/colorPrimary" />
 
 </RelativeLayout>
