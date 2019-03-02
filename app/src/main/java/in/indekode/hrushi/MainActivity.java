@@ -12,6 +12,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
@@ -32,6 +34,7 @@ import com.google.cloud.dialogflow.v2beta1.TextInput;
 import com.google.cloud.translate.Translate;
 import com.google.cloud.translate.TranslateOptions;
 import com.google.cloud.translate.Translation;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -63,6 +66,8 @@ public class MainActivity extends AppCompatActivity {
     private SessionName session;
     final Handler th = new Handler();
 
+    FirebaseAuth firebaseAuth;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,10 +78,12 @@ public class MainActivity extends AppCompatActivity {
 
         voice_ibtn = findViewById(R.id.img_btn_voice);
 
+        firebaseAuth = FirebaseAuth.getInstance();
+
         chatLayout = findViewById(R.id.chatLayout);
 
         initV2Chatbot();
-        showTextView("नमस्कार, मी तुमची मदत कशी करू शकतो?", BOT);
+        showTextView("???????, ?? ????? ??? ??? ??? ?????", BOT);
 
         voice_ibtn.setOnClickListener(this::getVoiceInput);
     }
@@ -98,13 +105,13 @@ public class MainActivity extends AppCompatActivity {
     private void getVoiceInput(View view) {
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
-        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "कृपया बाबाजीशी बोला...\n");
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "????? ???????? ????...\n");
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
         try{
             startActivityForResult(intent, RESULT_SPEECH);
         }
         catch (ActivityNotFoundException e){
-            Toast.makeText(getApplicationContext(),"अरेरे! तुमचा मोबाइल मायक्रोफोनला समर्थन देत नाही..", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(),"?????! ????? ?????? ???????????? ?????? ??? ????..", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -142,9 +149,9 @@ public class MainActivity extends AppCompatActivity {
                                         }
                                         else {
                                             // Java V2
-                                                QueryInput queryInput = QueryInput.newBuilder().setText(TextInput.newBuilder().setText(MrUserReply).setLanguageCode("en-US")).build();
-                                                new RequestJavaV2Task(MainActivity.this, session, sessionsClient, queryInput).execute();
-                                                break;
+                                            QueryInput queryInput = QueryInput.newBuilder().setText(TextInput.newBuilder().setText(MrUserReply).setLanguageCode("en-US")).build();
+                                            new RequestJavaV2Task(MainActivity.this, session, sessionsClient, queryInput).execute();
+                                            break;
                                         }
                                     }
 
@@ -256,6 +263,25 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(MainActivity.this, "Install Calender App", Toast.LENGTH_LONG).show();
         }
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.Logout:
+                firebaseAuth.signOut();
+                finish();
+                Toast.makeText(MainActivity.this, "Successfully Signed out", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(MainActivity.this, FirstActivity.class));
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 }

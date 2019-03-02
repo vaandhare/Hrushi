@@ -36,6 +36,37 @@
           "status": 2
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:627770449802:android:6091533e20c135ab",
+        "android_client_info": {
+          "package_name": "in.sih.hrushi_marathihealthcarechatbot"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "627770449802-svse67sa2l8c3uufrj2vludso4ntsdke.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDfWa5W39SzAw6LUDyTYob_9L9VAS4QWRE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
     }
   ],
   "configuration_version": "1"

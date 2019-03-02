@@ -5,10 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".FirstActivity"
-    android:background="@color/colorPrimary">
+    android:background="@color/colorBg">
 
     <ImageView
-        android:id="@+id/Logo_NCORD"
+        android:id="@+id/LLogo_NCORD"
         android:layout_width="wrap_content"
         android:layout_height="100dp"
         android:src="@drawable/ncordlogo"
@@ -16,82 +16,59 @@
         android:layout_marginEnd="30dp"
         android:layout_marginTop="30dp" />
 
-    <EditText
-        android:id="@+id/ET_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="आपले नाव टाइप करा"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
-        android:layout_below="@id/Logo_NCORD"
-        android:layout_marginTop="50dp"
-        android:inputType="text"/>
-
 
     <EditText
-        android:id="@+id/ET_email"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="आपला ईमेल आयडी टाइप करा"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginTop="20dp"
-        android:layout_below="@id/ET_name"
-        android:inputType="textEmailAddress"/>
-
-    <EditText
-        android:id="@+id/ET_mobile"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="तुमचा मोबाइल क्रमांक टाइप करा"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginTop="20dp"
-        android:layout_below="@id/ET_email"
-        android:inputType="phone"/>
-
-   <Spinner
-       android:id="@+id/SP_gender"
-       android:layout_width="match_parent"
-       android:layout_height="40dp"
-       android:layout_below="@id/ET_mobile"
-       android:layout_marginTop="20dp"
-       android:layout_marginStart="30dp"
-       android:layout_marginEnd="30dp"/>
-
-   <Button
-        android:id="@+id/BTN_otp"
+        android:id="@+id/LET_email"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_below="@id/SP_gender"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginTop="20dp"
-        android:background="@color/colorWhite"
-        android:text="Generate OTP"
-        android:textColor="@color/colorPrimary"/>
+        android:hint="आपला ईमेल टाइप करा"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginTop="200dp"
+        android:layout_below="@id/LLogo_NCORD"
+        android:inputType="textEmailAddress"
+        android:textColor="#000"
+        android:textColorHint="#000"
+        android:paddingStart="10dp"
+        android:background="@drawable/bg_edittext"/>
 
-   <EditText
-       android:id="@+id/ET_otp"
-       android:layout_width="match_parent"
-       android:layout_height="wrap_content"
-       android:layout_marginStart="100dp"
-       android:layout_marginEnd="100dp"
-       android:layout_below="@id/BTN_otp"
-       android:layout_marginTop="20dp"
-       android:text="OTP टाका"
-       android:inputType="numberSigned"/>
 
-   <Button
-       android:id="@+id/BTN_submit"
+    <EditText
+        android:id="@+id/LET_password"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_below="@id/ET_otp"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:layout_below="@id/LET_email"
         android:layout_marginTop="20dp"
-        android:background="@color/colorWhite"
-        android:text="Generate OTP"
-        android:textColor="@color/colorPrimary" />
+        android:hint="आपला पासवर्ड टाइप करा"
+        android:inputType="text"
+        android:textColor="#000"
+        android:textColorHint="#000"
+        android:paddingStart="10dp"
+        android:background="@drawable/bg_edittext"/>
+
+    <Button
+        android:id="@+id/LBTN_submit"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@id/LET_password"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginTop="40dp"
+        android:text="Login"
+        android:textColor="@color/colorWhite"
+        android:background="@drawable/bg_button"
+        android:textSize="20dp"/>
+
+    <TextView
+        android:id="@+id/TV_Reg"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@id/LBTN_submit"
+        android:text="नोंदणी करा (Register)"
+        android:gravity="center"
+        android:textSize="18dp"/>
+
 
 </RelativeLayout>

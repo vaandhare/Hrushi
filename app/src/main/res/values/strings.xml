@@ -1,4 +1,14 @@
 <resources>
     <string name="app_name">Hrushi - A Heathcare Chatbot</string>
     <string name="type_a_message">येथे टाइप करा...</string>
+
+    <string name="next">पुढे</string>
+    <string name="skip">वगळा</string>
+    <string name="start">चला सुरू करुया</string>
+    <string name="slide_1_title">ऋषी बॉट आपले स्वागत आहे</string>
+    <string name="slide_1_desc">तुमचा हेल्थकेअर सहाय्यक</string>
+    <string name="slide_2_title">ऋषी बॉट तुम्हाला या गोष्टीत मदत करेल </string>
+    <string name="slide_2_desc">नियुक्ती (Book Appointment ), स्मरणपत्रे (Set Reminder )आणि आणीबाणीच्या मदतीसाठी (Emergency Help).</string>
+    <string name="slide_3_title">पूर्णपणे आवाज नियंत्रित</string>
+    <string name="slide_3_desc">पूर्ण संवाद मराठीत</string>
 </resources>
