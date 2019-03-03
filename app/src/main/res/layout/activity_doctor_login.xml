@@ -4,11 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".FirstActivity"
+    tools:context=".DoctorLoginActivity"
     android:background="@color/colorBg">
 
     <ImageView
-        android:id="@+id/LLogo_NCORD"
+        android:id="@+id/DLLogo_NCORD"
         android:layout_width="wrap_content"
         android:layout_height="100dp"
         android:src="@drawable/ncordlogo"
@@ -18,14 +18,14 @@
 
 
     <EditText
-        android:id="@+id/LET_email"
+        android:id="@+id/DLET_email"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:hint="आपला ईमेल टाइप करा"
+        android:hint="Enter your Email"
         android:layout_marginStart="30dp"
         android:layout_marginEnd="30dp"
         android:layout_marginTop="200dp"
-        android:layout_below="@id/LLogo_NCORD"
+        android:layout_below="@id/DLLogo_NCORD"
         android:inputType="textEmailAddress"
         android:textColor="#000"
         android:textColorHint="#000"
@@ -34,14 +34,14 @@
 
 
     <EditText
-        android:id="@+id/LET_password"
+        android:id="@+id/DLET_password"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginStart="30dp"
         android:layout_marginEnd="30dp"
-        android:layout_below="@id/LET_email"
+        android:layout_below="@id/DLET_email"
         android:layout_marginTop="20dp"
-        android:hint="आपला पासवर्ड टाइप करा"
+        android:hint="Enter your password"
         android:inputType="textPassword"
         android:textColor="#000"
         android:textColorHint="#000"
@@ -49,10 +49,10 @@
         android:background="@drawable/bg_edittext"/>
 
     <Button
-        android:id="@+id/LBTN_submit"
+        android:id="@+id/DLBTN_submit"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_below="@id/LET_password"
+        android:layout_below="@id/DLET_password"
         android:layout_marginStart="30dp"
         android:layout_marginEnd="30dp"
         android:layout_marginTop="40dp"
@@ -62,11 +62,11 @@
         android:textSize="20dp"/>
 
     <TextView
-        android:id="@+id/TV_Reg"
+        android:id="@+id/DTV_Reg"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:layout_below="@id/LBTN_submit"
-        android:text="नोंदणी करा (Register)"
+        android:layout_below="@id/DLBTN_submit"
+        android:text="Doctor Register"
         android:gravity="center"
         android:textSize="18dp"/>
 

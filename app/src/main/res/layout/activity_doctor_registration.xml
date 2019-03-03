@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".DoctorRegistrationActivity"
+    android:background="@color/colorBg">
+
+    <ImageView
+        android:id="@+id/DRLogo_NCORD"
+        android:layout_width="wrap_content"
+        android:layout_height="100dp"
+        android:src="@drawable/ncordlogo"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginTop="30dp" />
+
+    <EditText
+        android:id="@+id/DRET_name"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:hint="Enter your name"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginTop="20dp"
+        android:layout_below="@id/DRLogo_NCORD"
+        android:inputType="text"
+        android:textColor="#000"
+        android:textColorHint="#000"
+        android:paddingStart="10dp"
+        android:background="@drawable/bg_edittext"/>
+
+
+    <EditText
+        android:id="@+id/DRET_mobile"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:hint="Enter your Mobile number"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginTop="20dp"
+        android:layout_below="@id/DRET_name"
+        android:inputType="phone"
+        android:textColor="#000"
+        android:textColorHint="#000"
+        android:paddingStart="10dp"
+        android:background="@drawable/bg_edittext"/>
+
+    <EditText
+        android:id="@+id/DRET_email"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:hint="Enter your Email "
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginTop="20dp"
+        android:layout_below="@id/DRET_mobile"
+        android:inputType="textEmailAddress"
+        android:textColor="#000"
+        android:textColorHint="#000"
+        android:paddingStart="10dp"
+        android:background="@drawable/bg_edittext"/>
+
+    <Spinner
+        android:id="@+id/DRSPR_speciality"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@id/DRET_email"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginStart="30dp"
+        android:textColor="#000"
+        android:textColorHint="#000"
+        android:paddingStart="10dp"
+        android:background="@drawable/bg_edittext"/>
+
+    <Spinner
+        android:id="@+id/DRSPR_location"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@id/DRSPR_speciality"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginStart="30dp"
+        android:textColor="#000"
+        android:textColorHint="#000"
+        android:paddingStart="10dp"
+        android:background="@drawable/bg_edittext"/>
+
+
+    <EditText
+        android:id="@+id/DRET_password"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:layout_below="@id/DRSPR_location"
+        android:layout_marginTop="20dp"
+        android:hint="Enter your Password"
+        android:inputType="textPassword"
+        android:textColor="#000"
+        android:textColorHint="#000"
+        android:paddingStart="10dp"
+        android:background="@drawable/bg_edittext"/>
+
+    <Button
+        android:id="@+id/DRBTN_reg"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_below="@id/DRET_password"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginTop="20dp"
+        android:text="Register "
+        android:textColor="@color/colorWhite"
+        android:background="@drawable/bg_button"
+        android:textSize="20dp" />
+
+    <TextView
+        android:id="@+id/DRTV_Login"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@id/DRBTN_reg"
+        android:text="Doctor Login"
+        android:gravity="center"
+        android:textSize="18dp"/>
+
+</RelativeLayout>

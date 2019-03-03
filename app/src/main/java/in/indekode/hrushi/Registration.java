@@ -73,8 +73,8 @@ public class Registration extends Activity  implements AdapterView.OnItemSelecte
 
     private void sendUserData() {
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-        DatabaseReference databaseReference = firebaseDatabase.getReference(firebaseAuth.getUid());
-        UserProfile userProfile = new UserProfile(name, email, age, mobile, gen2, ehelp);
+        DatabaseReference databaseReference = firebaseDatabase.getReference("Patient").child(firebaseAuth.getUid());
+        UserProfile userProfile = new UserProfile(name, age, mobile, gen2, ehelp);
         databaseReference.setValue(userProfile);
     }
 

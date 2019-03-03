@@ -5,7 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_CALENDAR" />
     <uses-permission android:name="android.permission.WRITE_CALENDAR" />
-    <uses-permission android:name="android.permission.CALL_PHONE"/>
+    <uses-permission android:name="android.permission.CALL_PHONE" />
 
     <application
         android:allowBackup="true"
@@ -14,9 +14,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Registration"/>
+        <activity android:name=".D_P_Activity"
+            android:theme="@style/Theme.AppCompat.NoActionBar"/>
+        <activity android:name=".DoctorRegistrationActivity"/>
+        <activity android:name=".DoctorLoginActivity" />
+        <activity android:name=".DoctorActivity" />
+        <activity android:name=".Registration" />
         <activity android:name=".MainActivity" />
-        <activity android:name=".FirstActivity"/>
+        <activity android:name=".FirstActivity" />
         <activity
             android:name=".WelcomeActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar">

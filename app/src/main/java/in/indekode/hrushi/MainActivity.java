@@ -1,24 +1,16 @@
 package in.indekode.hrushi;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.ActivityNotFoundException;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.provider.CalendarContract;
-import android.provider.Settings;
 import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
 import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v4.app.ActivityCompat;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -45,6 +37,11 @@ import com.google.cloud.translate.Translate;
 import com.google.cloud.translate.TranslateOptions;
 import com.google.cloud.translate.Translation;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -52,8 +49,7 @@ import java.util.Calendar;
 import java.util.Locale;
 import java.util.UUID;
 
-
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements TextToSpeech.OnInitListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final int USER = 10001;
@@ -64,9 +60,9 @@ public class MainActivity extends AppCompatActivity {
     private String uuid = UUID.randomUUID().toString();
     private LinearLayout chatLayout;
 
-    ImageButton voice_ibtn;
+    ImageButton voice_ibtn, bot_voice;
     public String v_msg;
-
+    String emergency_phone_no;
     // TTS
     final int RESULT_SPEECH = 100;
     TextToSpeech mTextToSpeech;
@@ -77,6 +73,13 @@ public class MainActivity extends AppCompatActivity {
     final Handler th = new Handler();
 
     FirebaseAuth firebaseAuth;
+    FirebaseDatabase firebaseDatabase;
+
+    String date=" ", time=" ", R_name=" ", R_name2=" ",year=" ", month=" ", day=" ", hrs=" ", min=" ";
+    private long startTime,endTime;
+    String username, drno;
+    TextToSpeech speech;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,7 +91,32 @@ public class MainActivity extends AppCompatActivity {
 
         voice_ibtn = findViewById(R.id.img_btn_voice);
 
+        speech = new TextToSpeech(this, this);
+
         firebaseAuth = FirebaseAuth.getInstance();
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference databaseReference = firebaseDatabase.getReference("Patient").child(firebaseAuth.getUid());
+
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                UserProfile userProfile = dataSnapshot.getValue(UserProfile.class);
+                try{
+                    emergency_phone_no = userProfile.ehelp;
+                    username = userProfile.name;
+
+                }catch (NullPointerException ex){
+                    Toast.makeText(MainActivity.this, "Error in firebase connectivity", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(MainActivity.this,databaseError.getCode(),Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
 
         chatLayout = findViewById(R.id.chatLayout);
 
@@ -101,7 +129,16 @@ public class MainActivity extends AppCompatActivity {
                 MainActivity.this.getVoiceInput(view);
             }
         });
+
+//        bot_voice.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                voiceOP(BResponce);
+//            }
+//        });
+
     }
+
 
     private void initV2Chatbot() {
         try {
@@ -159,14 +196,15 @@ public class MainActivity extends AppCompatActivity {
                                     String[] split_reply = MrUserReply.split(" ");
 
                                     for (String sr : split_reply) {
-                                        if (sr.equals("emergency") || sr.equals("call") || sr.equals("help")) {
-//                                            CalenderActivity(year,mnth,day,hrs,min,summary);
-                                            String number = "7264814704";
+                                        if (sr.equals("emergency") || sr.equals("call") || sr.equals("help") || sr.equals("Emergency") || sr.equals("Call") || sr.equals("Help")) {
                                             Intent callIntent = new Intent(Intent.ACTION_CALL);
-                                            callIntent.setData(Uri.parse("tel:"+number));
+                                            callIntent.setData(Uri.parse("tel:"+emergency_phone_no));
                                             startActivity(callIntent);
-                                        }
-                                        else {
+                                        }else if (sr.equals("ambulance") || sr.equals("Ambulance")) {
+                                            Intent callIntent = new Intent(Intent.ACTION_CALL);
+                                            callIntent.setData(Uri.parse("tel:"+"101"));
+                                            startActivity(callIntent);
+                                        }else {
                                             // Java V2
                                             QueryInput queryInput = QueryInput.newBuilder().setText(TextInput.newBuilder().setText(MrUserReply).setLanguageCode("en-US")).build();
                                             new RequestJavaV2Task(MainActivity.this, session, sessionsClient, queryInput).execute();
@@ -191,11 +229,52 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    public void voiceOP(String responce){
+        CharSequence charSequence = responce;
+        speech.speak(charSequence, TextToSpeech.QUEUE_FLUSH, null, "id1");
+    }
+
     @SuppressLint("StaticFieldLeak")
     public void callbackV2(DetectIntentResponse response) {
         if (response != null) {
 
             String botReply = response.getQueryResult().getFulfillmentText();
+
+            try{
+                String[] splitted_BR = botReply.split(" ");
+                for(String ss : splitted_BR) {
+                    if (ss.equals("Scheduled!!")) {
+                        for (String aSplitted_BR : splitted_BR) {
+                            date = splitted_BR[1];
+                            time = splitted_BR[3];
+                            R_name = splitted_BR[5];
+                            R_name2 = splitted_BR[6];
+                        }
+                        String[] split_date = date.split("-");
+                        for (String aSplit_date : split_date) {
+                            year = split_date[0];
+                            month = split_date[1];
+                            day = split_date[2];
+                        }
+                        String[] split_time = time.split(":");
+                        for (String aSplit_time : split_time) {
+                            hrs = split_time[0];
+                            min = split_time[1];
+                        }
+                        drno= R_name +" "+R_name2;
+                        String reminder_name = "Appointment Booked with " + drno ;
+                        CalenderActivity(Integer.parseInt(year), Integer.parseInt(month), Integer.parseInt(day), Integer.parseInt(hrs), Integer.parseInt(min), reminder_name);
+//                        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+//                        DatabaseReference databaseReference = firebaseDatabase.getReference("Appointments");
+//                        AppointmentProfile appointmentProfile = new AppointmentProfile(username, drno, date, time);
+//                        databaseReference.setValue(appointmentProfile);
+                    }
+                }
+            }catch (NumberFormatException ex) {
+                Toast.makeText(MainActivity.this, " Error ", Toast.LENGTH_SHORT).show();
+            }catch ( ArrayIndexOutOfBoundsException index){
+                Toast.makeText(MainActivity.this, "Error", Toast.LENGTH_SHORT).show();
+            }
 
             final AsyncTask<Void, Void, Void> de = new AsyncTask<Void, Void, Void>() {
                 @SuppressLint("WrongThread")
@@ -209,6 +288,7 @@ public class MainActivity extends AppCompatActivity {
                         String mrbotReply = translation.getTranslatedText();
                         Log.d(TAG, "Bot Reply: " + mrbotReply);
                         showTextView(mrbotReply, BOT);
+                        voiceOP(mrbotReply);
                     });
                     return null;
                 }
@@ -249,13 +329,6 @@ public class MainActivity extends AppCompatActivity {
         return (FrameLayout) inflater.inflate(R.layout.bot_msg_layout, null);
     }
 
-    final int year=2018;
-    final int mnth = 04;
-    final int day= 28;
-    final int hrs = 21;
-    final int min = 00;
-    final String summary = "This is title";
-    private long startTime,endTime;
 
     public void CalenderActivity(int year, int mnth, int day, int hrs, int min, String summary){
         Calendar beginCal = Calendar.getInstance();
@@ -303,4 +376,16 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onInit(int status) {
+        if ( status == TextToSpeech.SUCCESS){
+            int result = speech.setLanguage(Locale.forLanguageTag("hin"));
+
+            if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED){
+                Toast.makeText(MainActivity.this, "Language not supported", Toast.LENGTH_SHORT).show();
+            }
+        }else {
+            Toast.makeText(MainActivity.this, "Initialization Failed", Toast.LENGTH_SHORT).show();
+        }
+    }
 }

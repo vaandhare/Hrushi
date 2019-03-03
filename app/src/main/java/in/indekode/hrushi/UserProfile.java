@@ -2,7 +2,6 @@ package in.indekode.hrushi;
 
 public class UserProfile {
     public String name;
-    public String email;
     public String age;
     public String mobile;
     public String gender;
@@ -12,13 +11,12 @@ public class UserProfile {
 
     }
 
-    public UserProfile(String name, String email, String age, String mobile, String gender, String ehelp) {
+    public UserProfile(String name, String age, String mobile, String gender, String ehelp) {
         this.name = name;
         this.age = age;
         this.mobile = mobile;
         this.gender = gender;
         this.ehelp = ehelp;
-        this.email = email;
     }
 
     public String getName() {
@@ -29,13 +27,6 @@ public class UserProfile {
         this.name = name;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
 
     public String getAge() {
         return age;

@@ -8,7 +8,7 @@
 
     <RelativeLayout
         android:id="@+id/inputLayout"
-        android:layout_width="100dp"
+        android:layout_width="match_parent"
         android:layout_height="70dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
@@ -16,36 +16,10 @@
         android:layout_marginBottom="20dp">
 
 
-        <!--<ImageButton-->
-            <!--android:id="@+id/img_btn_voice"-->
-            <!--android:layout_width="45dp"-->
-            <!--android:layout_height="45dp"-->
-            <!--android:layout_alignParentBottom="true"-->
-            <!--android:layout_marginBottom="1dp"-->
-            <!--android:layout_marginStart="3dp"-->
-            <!--android:background="@drawable/background_send_btn"-->
-            <!--android:src="@drawable/voice_btn"-->
-            <!--tools:ignore="ContentDescription" />-->
-
-        <!--<EditText-->
-            <!--android:id="@+id/text_send"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:padding="10dp"-->
-            <!--android:layout_marginBottom="1dp"-->
-            <!--android:layout_marginStart="5dp"-->
-            <!--android:background="@drawable/background_text"-->
-            <!--android:hint="@string/type_a_message"-->
-            <!--android:layout_marginEnd="5dp"-->
-            <!--android:layout_alignParentBottom="true"-->
-            <!--android:layout_toEndOf="@id/img_btn_voice"-->
-            <!--android:layout_toStartOf="@id/img_btn_send"-->
-            <!--tools:ignore="Autofill,TextFields" />-->
-
         <ImageButton
             android:id="@+id/img_btn_voice"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="20dp"
             android:background="@drawable/background_send_btn"
