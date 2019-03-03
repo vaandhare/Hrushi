@@ -6,12 +6,84 @@
     android:layout_height="match_parent"
     tools:context=".DoctorActivity">
 
-    <TextView
-        android:id="@+id/appointment"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="ABCD"
+        android:layout_height="250dp"
+        android:background="@color/colorBlue"/>
+
+    <TextView
+        android:id="@+id/appointment_text"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="50dp"
+        android:text="Appointment"
         android:gravity="center"
-        android:textSize="30dp"/>
+        android:textSize="25dp"/>
+
+    <android.support.v7.widget.CardView
+        android:layout_below="@id/appointment_text"
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/card_view"
+        android:layout_gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="230dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        card_view:cardCornerRadius="10dp"
+        android:padding="5dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/Dr_name"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="20dp"
+                android:paddingStart="20dp"
+                android:gravity="center_vertical"
+                android:textSize="23dp"
+                android:textColor="@color/colorDark"/>
+
+            <TextView
+                android:id="@+id/Patient_name"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="10dp"
+                android:paddingStart="20dp"
+                android:gravity="center_vertical"
+                android:layout_below="@id/Dr_name"
+                android:textSize="23dp"
+                android:textColor="@color/colorDark"/>
+
+            <TextView
+                android:id="@+id/Date"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="10dp"
+                android:paddingStart="20dp"
+                android:gravity="center_vertical"
+                android:layout_below="@id/Patient_name"
+                android:textSize="23dp"
+                android:textColor="@color/colorDark"/>
+
+            <TextView
+                android:id="@+id/Time"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:paddingStart="20dp"
+                android:layout_marginTop="10dp"
+                android:gravity="center_vertical"
+                android:layout_below="@id/Date"
+                android:textSize="23dp"
+                android:textColor="@color/colorDark"/>
+
+
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
 
 </RelativeLayout>

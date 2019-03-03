@@ -19,7 +19,7 @@ import com.google.firebase.database.ValueEventListener;
 
 public class DoctorActivity extends AppCompatActivity {
 
-    TextView appointment;
+    TextView dr, patient, date, time;
     String Date, Time, Patientname, Drname;
 
     FirebaseAuth firebaseAuth;
@@ -31,34 +31,42 @@ public class DoctorActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_doctor);
 
-        appointment = findViewById(R.id.appointment);
+        dr = findViewById(R.id.Dr_name);
+        patient = findViewById(R.id.Patient_name);
+        date = findViewById(R.id.Date);
+        time = findViewById(R.id.Time);
 
         firebaseAuth = FirebaseAuth.getInstance();
-//        firebaseDatabase = FirebaseDatabase.getInstance();
-//        DatabaseReference databaseReference = firebaseDatabase.getReference("Appointment");
-//        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                AppointmentProfile appointmentProfile = dataSnapshot.getValue(AppointmentProfile.class);
-//                try{
-//                    Date = appointmentProfile.date;
-//                    Time = appointmentProfile.time;
-//                    Patientname = appointmentProfile.patientname;
-//                    Drname = appointmentProfile.drname;
-//
-//                }catch (NullPointerException ex){
-//                    Toast.makeText(DoctorActivity.this, "Error in firebase connectivity", Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//                Toast.makeText(DoctorActivity.this,databaseError.getCode(),Toast.LENGTH_SHORT).show();
-//            }
-//        });
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference databaseReference = firebaseDatabase.getReference("Appointments");
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
+                AppointmentProfile appointmentProfile = dataSnapshot.getValue(AppointmentProfile.class);
+                try {
+                    Date = appointmentProfile.date;
+                    Time = appointmentProfile.time;
+                    Patientname = appointmentProfile.patientname;
+                    Drname = appointmentProfile.drname;
+
+                    dr.setText("Dr. Name : " + Drname);
+                    patient.setText("Patient Name : "+ Patientname);
+                    date.setText("Date : "+ Date);
+                    time.setText("Time : "+ Time);
+
+                }catch (NullPointerException ex){
+                    Toast.makeText(DoctorActivity.this, "Error in firebase connectivity", Toast.LENGTH_SHORT).show();
+                }
+            }}
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(DoctorActivity.this,databaseError.getCode(),Toast.LENGTH_SHORT).show();
+            }
+        });
 
 
-        appointment.setText(Patientname + " booked appointment on " +Date + " on "+Time+" with "+Drname );
 
     }
 

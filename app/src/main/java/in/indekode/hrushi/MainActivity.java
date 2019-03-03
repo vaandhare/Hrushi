@@ -106,7 +106,7 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
                     username = userProfile.name;
 
                 }catch (NullPointerException ex){
-                    Toast.makeText(MainActivity.this, "Error in firebase connectivity", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, " ", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -202,7 +202,7 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
                                             startActivity(callIntent);
                                         }else if (sr.equals("ambulance") || sr.equals("Ambulance")) {
                                             Intent callIntent = new Intent(Intent.ACTION_CALL);
-                                            callIntent.setData(Uri.parse("tel:"+"101"));
+                                            callIntent.setData(Uri.parse("tel:"+"108"));
                                             startActivity(callIntent);
                                         }else {
                                             // Java V2
@@ -243,6 +243,8 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
             try{
                 String[] splitted_BR = botReply.split(" ");
                 for(String ss : splitted_BR) {
+
+                    //For Appointment
                     if (ss.equals("Scheduled!!")) {
                         for (String aSplitted_BR : splitted_BR) {
                             date = splitted_BR[1];
@@ -264,10 +266,33 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
                         drno= R_name +" "+R_name2;
                         String reminder_name = "Appointment Booked with " + drno ;
                         CalenderActivity(Integer.parseInt(year), Integer.parseInt(month), Integer.parseInt(day), Integer.parseInt(hrs), Integer.parseInt(min), reminder_name);
-//                        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-//                        DatabaseReference databaseReference = firebaseDatabase.getReference("Appointments");
-//                        AppointmentProfile appointmentProfile = new AppointmentProfile(username, drno, date, time);
-//                        databaseReference.setValue(appointmentProfile);
+                        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+                        DatabaseReference databaseReference = firebaseDatabase.getReference("Appointments");
+                        AppointmentProfile appointmentProfile = new AppointmentProfile(username, drno, date, time);
+                        databaseReference.setValue(appointmentProfile);
+
+                        //For Reminder
+                    }else  if (ss.equals("Scheduled!!")) {
+                        for (String aSplitted_BR : splitted_BR) {
+                            date = splitted_BR[1];
+                            time = splitted_BR[3];
+                            R_name = splitted_BR[5];
+                            R_name2 = splitted_BR[6];
+                        }
+                        String[] split_date = date.split("-");
+                        for (String aSplit_date : split_date) {
+                            year = split_date[0];
+                            month = split_date[1];
+                            day = split_date[2];
+                        }
+                        String[] split_time = time.split(":");
+                        for (String aSplit_time : split_time) {
+                            hrs = split_time[0];
+                            min = split_time[1];
+                        }
+                        drno= R_name +" "+R_name2;
+                        String reminder_name = "Appointment Booked with " + drno ;
+                        CalenderActivity(Integer.parseInt(year), Integer.parseInt(month), Integer.parseInt(day), Integer.parseInt(hrs), Integer.parseInt(min), reminder_name);
                     }
                 }
             }catch (NumberFormatException ex) {
